@@ -9,7 +9,6 @@ Stable tag: 1.5.2
 
 Hashtags for WordPress, BuddyPress and bbPress. Adds hashtag links to BuddyPress activity and bbPress topics. Hashtags turn into links that are used to search items based on topics.
 
-demo: http://demo.taptappress.com
 
 == Installation ==
 
