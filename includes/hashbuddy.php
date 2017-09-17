@@ -61,6 +61,7 @@ function hashbuddy_activity_hashtags_filter( $content ) {
  */
 function hashbuddy_bp_activity_get_where_conditions( $where_conditions, $r, $select_sql, $from_sql, $join_sql ) {
 
+
 	if ( isset( $r['search_terms'] ) && ! empty( $r['search_terms'] ) ) {
 
 		$hash = sanitize_text_field( $r['search_terms'] );
@@ -76,6 +77,39 @@ function hashbuddy_bp_activity_get_where_conditions( $where_conditions, $r, $sel
 
 }
 add_filter( 'bp_activity_get_where_conditions', 'hashbuddy_bp_activity_get_where_conditions', 10, 5 );
+
+/**
+ * Add search term to activity filter ajax
+ *
+ * @return void
+ */
+function hashbuddy_add_search_term_activity_filter() {
+
+	if ( bp_is_current_component( 'activity' ) && isset( $_GET['s'] ) && ! empty( $_GET['s'] ) ) {
+		?>
+		<script>
+		jQuery(document).bind('ajaxSend', function(event, xhr, params) {
+			var search = hashbuddy_getParameterByName('s');
+			if ( search !== null ) {
+				params.data = params.data + '&search_terms=' + search;
+			}
+		});
+
+		function hashbuddy_getParameterByName(name, url) {
+		    if (!url) url = window.location.href;
+		    name = name.replace(/[\[\]]/g, "\\$&");
+		    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+		        results = regex.exec(url);
+		    if (!results) return null;
+		    if (!results[2]) return '';
+		    return decodeURIComponent(results[2].replace(/\+/g, " "));
+		}
+
+		</script>
+		<?php
+	}
+}
+add_action( 'wp_footer', 'hashbuddy_add_search_term_activity_filter' );
 
 /**
  * Turn on stream mode when searching a hashtag so comment show
